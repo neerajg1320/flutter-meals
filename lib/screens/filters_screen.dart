@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:meals/widgets/settings_item.dart';
 import 'package:meals/providers/filters_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key, required this.currentFilters});
-
-  final Map<Filter, bool> currentFilters;
+class FiltersScreen extends ConsumerStatefulWidget {
+  const FiltersScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   var _gluttenFreeFilterSet = false;
   var _lactoseFreeFilterSet = false;
   var _vegeterian = false;
@@ -23,10 +22,12 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   void initState() {
     super.initState();
-    _gluttenFreeFilterSet = widget.currentFilters[Filter.gluttenFree]!;
-    _lactoseFreeFilterSet = widget.currentFilters[Filter.lactoseFree]!;
-    _vegeterian = widget.currentFilters[Filter.vegeterian]!;
-    _vegan = widget.currentFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersProvider);
+
+    _gluttenFreeFilterSet = activeFilters[Filter.gluttenFree]!;
+    _lactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+    _vegeterian = activeFilters[Filter.vegeterian]!;
+    _vegan = activeFilters[Filter.vegan]!;
   }
 
 
@@ -39,13 +40,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
       ),
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.gluttenFree: _gluttenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegeterian: _vegeterian,
             Filter.vegan: _vegan,
-          }); 
-          return false;
+          });
+          // Navigator.of(context).pop(); 
+          return true;
         },
         child: Column(
           children: [
