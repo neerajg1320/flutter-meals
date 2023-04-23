@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:meals/data/dummy_data.dart';
-import 'package:meals/models/meal.dart';
 import 'package:meals/screens/categoires_screen.dart';
 import 'package:meals/screens/filters_screen.dart';
 import 'package:meals/screens/meals_screen.dart';
@@ -8,6 +6,7 @@ import 'package:meals/widgets/main_drawer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/providers/meals_provider.dart';
 import 'package:meals/providers/favorites_provider.dart';
+import 'package:meals/providers/filters_provider.dart';
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
@@ -21,7 +20,7 @@ class TabsScreen extends ConsumerStatefulWidget {
 const kInitialFilters = {
     Filter.gluttenFree: false,
     Filter.lactoseFree: false,
-    Filter.vegetrian: false,
+    Filter.vegeterian: false,
     Filter.vegan: false,
   };
 
@@ -64,7 +63,7 @@ class _TabScreenState extends ConsumerState<TabsScreen> {
       if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
         return false;
       }
-      if (_selectedFilters[Filter.vegetrian]! && !meal.isLactoseFree) {
+      if (_selectedFilters[Filter.vegeterian]! && !meal.isLactoseFree) {
         return false;
       }
       if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
